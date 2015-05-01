@@ -1,0 +1,38 @@
+{
+    "name": "klinche/authorizenet",
+    "type": "library",
+    "description": "Authorize.Net Omnipay library using Authorize SDK",
+    "keywords": [
+        "authorize net",
+        "authorize",
+        "authorize.net",
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment"
+    ],
+    "homepage": "https://github.com/Klinche/authorizenet",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Brooks",
+            "email": "dbrooks@klinche.com"
+        },
+    ],
+    "autoload": {
+        "psr-4": { "Klinche\\AuthorizeNet\\" : "src/" }
+    },
+    "require": {
+        "omnipay/common": "~2.0",
+        "authorizenet/authorizenet": "~1.8",
+    },
+    "require-dev": {
+        "omnipay/tests": "~2.0",
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}
