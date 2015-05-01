@@ -25,10 +25,10 @@
     },
     "require": {
         "omnipay/common": "~2.0",
-        "authorizenet/authorizenet": "~1.8",
+        "authorizenet/authorizenet": "~1.8"
     },
     "require-dev": {
-        "omnipay/tests": "~2.0",
+        "omnipay/tests": "~2.0"
     },
     "extra": {
         "branch-alias": {
