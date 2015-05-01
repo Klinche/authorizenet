@@ -18,7 +18,7 @@
         {
             "name": "Daniel Brooks",
             "email": "dbrooks@klinche.com"
-        },
+        }
     ],
     "autoload": {
         "psr-4": { "Klinche\\AuthorizeNet\\" : "src/" }
