@@ -7,38 +7,38 @@ use Omnipay\Common\Message\RequestInterface;
 use Omnipay\Common\Exception\InvalidResponseException;
 
 /**
- * Authorize.Net AIMSettledTransactionReportResponse
+ * Authorize.Net AIM Report Response
  */
 class AIMSettledBatchListReportResponse extends AIMReportResponse
 {
+    /** $response \AuthorizeNetTD_Response */
+    public $response = null;
 
-    protected $resultCode = null;
 
-    public function __construct(RequestInterface $request, $data)
+    /**
+     * Returns a list of batch ids
+     *
+     * @return array
+     */
+    public function getBatchIds()
     {
-        parent::__construct($request, $data);
-
-        $dataString = str_replace('xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd"', '', $data);
-
-        $doc = new \DOMDocument();
-        $doc->loadXML($dataString);
-
-        $doc->formatOutput = true;
-
-        $resultCodes = $doc->getElementsByTagName('resultCode');
-        $resultCode = $resultCodes->item(0);
-
-        $this->resultCode = $resultCode->textContent;
-
-        $messages = $doc->getElementsByTagName('message');
-    }
-
-
-    public function isSuccessful()
-    {
-        if(strtolower($this->resultCode) == 'error') {
-            return false;
+        $ids = array();
+        $list = $this->response->xml->batchList;
+        foreach($list as $batch) {
+            $ids[] = $batch->batchId;
         }
-        return true;
+
+        return $ids;
     }
+
+    /**
+     * Returns the batches
+     *
+     * @return array
+     */
+    public function getBatches()
+    {
+        return $this->response->xml->batchList;
+    }
+
 }

@@ -16,7 +16,7 @@ class CaptureRequest extends AbstractRequest
 
         $this->validate('transactionReference');
 
-        $this->auth->trans_id = $this->getTransactionReference();
+        $this->aim->trans_id = $this->getTransactionReference();
 
         return $data;
     }
@@ -24,7 +24,7 @@ class CaptureRequest extends AbstractRequest
     public function sendData($data)
     {
         /** @var \AuthorizeNetAIM_Response $response */
-        $response = $this->auth->priorAuthCapture();
+        $response = $this->aim->priorAuthCapture();
 
         return $this->response = new AIMResponse($this, $response);
     }

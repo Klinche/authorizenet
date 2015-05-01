@@ -15,13 +15,13 @@ class AIMVoidRequest extends AbstractRequest
 
         $this->validate('transactionReference');
 
-        $this->auth->trans_id = $this->getTransactionReference();
+        $this->aim->trans_id = $this->getTransactionReference();
     }
 
     public function sendData($data)
     {
         /** @var \AuthorizeNetAIM_Response $response */
-        $response = $this->auth->void();
+        $response = $this->aim->void();
 
         return $this->response = new AIMResponse($this, $response);
     }

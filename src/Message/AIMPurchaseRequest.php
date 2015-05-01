@@ -10,7 +10,7 @@ class AIMPurchaseRequest extends AIMAuthorizeRequest
     public function sendData($data)
     {
         /** @var \AuthorizeNetAIM_Response $response */
-        $response = $this->auth->authorizeAndCapture();
+        $response = $this->aim->authorizeAndCapture();
 
         return $this->response = new AIMResponse($this, $response);
     }

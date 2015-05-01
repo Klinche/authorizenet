@@ -3,50 +3,34 @@
 namespace Omnipay\AuthorizeNetSDK\Message;
 
 /**
- * Authorize.Net AIM Report Request
+ * Authorize.Net TD Report Request
  */
 class AIMSettledBatchListReportRequest extends AIMReportRequest
 {
-    protected $liveEndpoint = 'https://api.authorize.net/xml/v1/request.api';
-    protected $developerEndpoint = 'https://apitest.authorize.net/xml/v1/request.api';
 
-    protected $reportAction = 'getSettledBatchListRequest';
-
-
-    /**
-     * @return \DOMDocument
-     */
-    public function getData()
+    public function sendData($data)
     {
-        $domDocument = parent::getData();
-        $firstNode = $domDocument->firstChild;
-
         $firstSettlementDate = $this->getFirstSettlementDate();
         $lastSettlementDate = $this->getLastSettlementDate();
 
         if($firstSettlementDate instanceof \DateTime) {
             $firstSettlementDate->setTimezone(new \DateTimeZone('UTC'));
-            $firstNode->appendChild($domDocument->createElement('firstSettlementDate', $firstSettlementDate->format('Y-m-d\Th:m:s')));
-        } elseif(!is_null($firstSettlementDate)) {
-            $firstNode->appendChild($domDocument->createElement('firstSettlementDate', $firstSettlementDate));
+            $firstSettlementDate = $firstSettlementDate->format('Y-m-d\Th:m:s');
         }
 
         if(!is_null($firstSettlementDate)) {
             if ($lastSettlementDate instanceof \DateTime) {
                 $lastSettlementDate->setTimezone(new \DateTimeZone('UTC'));
-                $firstNode->appendChild($domDocument->createElement('lastSettlementDate', $lastSettlementDate->format('Y-m-d\Th:m:s')));
-            } elseif (!is_null($lastSettlementDate)) {
-                $firstNode->appendChild($domDocument->createElement('lastSettlementDate', $lastSettlementDate));
+                $lastSettlementDate = $lastSettlementDate->format('Y-m-d\Th:m:s');
             }
+        } else {
+            $lastSettlementDate = null;
         }
 
-        return $domDocument;
-    }
+        /** @var \AuthorizeNetTD_Response $response */
+        $response = $this->atd->getSettledBatchList($this->getIncludeStatistics(), $firstSettlementDate, $lastSettlementDate, true);
 
-    public function sendData($data)
-    {
-        $httpResponse = $this->httpClient->post($this->getEndpoint(), array('Content-Type' => 'text/xml'), $data->saveXML())->send();
-        return $this->response = new AIMSettledTransactionReportResponse($this, $httpResponse->getBody());
+        return $this->response = new AIMSettledBatchListReportResponse($this, $response);
     }
 
     public function getFirstSettlementDate()
