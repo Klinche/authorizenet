@@ -1,6 +1,6 @@
 <?php
 
-namespace Klinche\AuthorizeNet\Message;
+namespace Omnipay\AuthorizeNetSDK\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;

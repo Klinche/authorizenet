@@ -1,22 +1,31 @@
 <?php
 
-namespace Klinche\AuthorizeNet\Message;
+namespace Omnipay\AuthorizeNetSDK\Message;
 
 /**
  * Authorize.Net Capture Request
  */
 class CaptureRequest extends AbstractRequest
 {
-    protected $action = 'PRIOR_AUTH_CAPTURE';
 
     public function getData()
     {
+        parent::getData();
+
         $this->validate('amount', 'transactionReference');
 
-        $data = $this->getBaseData();
-        $data['x_amount'] = $this->getAmount();
-        $data['x_trans_id'] = $this->getTransactionReference();
+        $this->validate('transactionReference');
+
+        $this->auth->trans_id = $this->getTransactionReference();
 
         return $data;
+    }
+
+    public function sendData($data)
+    {
+        /** @var \AuthorizeNetAIM_Response $response */
+        $response = $this->auth->priorAuthCapture();
+
+        return $this->response = new AIMResponse($this, $response);
     }
 }

@@ -6,7 +6,7 @@
  * Time: 1:33 PM
  */
 
-namespace Klinche\AuthorizeNet;
+namespace Omnipay\AuthorizeNetSDK;
 
 use DateTime;
 use DateTimeZone;

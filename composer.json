@@ -21,7 +21,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Klinche\\AuthorizeNet\\" : "src/" }
+        "psr-4": { "Omnipay\\AuthorizeNetSDK\\" : "src/" }
     },
     "require": {
         "omnipay/common": "~2.0",

@@ -1,25 +1,29 @@
 <?php
 
-namespace Klinche\AuthorizeNet\Message;
+namespace Omnipay\AuthorizeNetSDK\Message;
 
 /**
  * Authorize.Net Refund Request
  */
 class AIMRefundRequest extends AbstractRequest
 {
-    protected $action = 'CREDIT';
-
     public function getData()
     {
-        $data = $this->getBaseData('RefundTransaction');
+        parent::getData();
 
         $this->validate('amount', 'transactionReference');
 
-        $data['x_trans_id'] = $this->getTransactionReference();
-        $data['x_card_num'] = $this->getCard()->getNumber();
-        $data['x_exp_date'] = $this->getCard()->getExpiryDate('my');
-        $data['x_amount'] = $this->getAmount();
+        $this->auth->trans_id = $this->getTransactionReference();
 
-        return $data;
+        $this->auth->card_num = $card->getNumber();
+        $this->auth->exp_date = $card->getExpiryDate('my');
+    }
+
+    public function sendData($data)
+    {
+        /** @var \AuthorizeNetAIM_Response $response */
+        $response = $this->auth->credit();
+
+        return $this->response = new AIMResponse($this, $response);
     }
 }

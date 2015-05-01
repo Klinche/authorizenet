@@ -1,6 +1,6 @@
 <?php
 
-namespace Klinche\AuthorizeNet\Message;
+namespace Omnipay\AuthorizeNetSDK\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
@@ -11,48 +11,52 @@ use Omnipay\Common\Exception\InvalidResponseException;
  */
 class AIMResponse extends AbstractResponse
 {
-    public function __construct(RequestInterface $request, $data)
+    /** @var \AuthorizeNetAIM_Response */
+    protected $response = null;
+
+    public function __construct(RequestInterface $request, \AuthorizeNetAIM_Response $response)
     {
         $this->request = $request;
-        $this->data = explode('|,|', substr($data, 1, -1));
-
-        if (count($this->data) < 10) {
-            throw new InvalidResponseException();
-        }
+        $this->response = $response;
     }
 
     public function isSuccessful()
     {
-        return '1' === $this->getCode();
+        return $this->response->approved;
     }
 
     public function getCode()
     {
-        return $this->data[0];
+        return $this->response->response_code;
     }
 
     public function getReasonCode()
     {
-        return $this->data[2];
+        return $this->response->response_reason_code;
     }
 
     public function getMessage()
     {
-        return $this->data[3];
+        return $this->response->response_reason_text;
+    }
+
+    public function getErrorMessage()
+    {
+        return $this->response->error_message;
     }
 
     public function getAuthorizationCode()
     {
-        return $this->data[4];
+        return $this->response->authorization_code;
     }
 
     public function getAVSCode()
     {
-        return $this->data[5];
+        return $this->response->avs_response;
     }
 
     public function getTransactionReference()
     {
-        return $this->data[6];
+        return $this->response->transaction_id;
     }
 }

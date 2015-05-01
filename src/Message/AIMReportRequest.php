@@ -1,6 +1,6 @@
 <?php
 
-namespace Klinche\AuthorizeNet\Message;
+namespace Omnipay\AuthorizeNetSDK\Message;
 
 /**
  * Authorize.Net AIM Report Request

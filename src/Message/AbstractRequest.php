@@ -1,16 +1,20 @@
 <?php
 
-namespace Klinche\AuthorizeNet\Message;
+namespace Omnipay\AuthorizeNetSDK\Message;
 
-use Klinche\AuthorizeNet\BankAccount;
+use Omnipay\AuthorizeNetSDK\BankAccount;
 
 /**
  * Authorize.Net Abstract Request
  */
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
-    protected $liveEndpoint = 'https://secure.authorize.net/gateway/transact.dll';
-    protected $developerEndpoint = 'https://test.authorize.net/gateway/transact.dll';
+    /** @var \AuthorizeNetAIM */
+    protected $auth = null;
+
+    public function __construct() {
+        $this->auth = new \AuthorizeNetAIM();
+    }
 
     public function getApiLoginId()
     {
@@ -76,98 +80,74 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('bankAccount', $value);
     }
 
-    protected function getBaseData()
+    protected function getData()
     {
-        $data = array();
-        $data['x_login'] = $this->getApiLoginId();
-        $data['x_tran_key'] = $this->getTransactionKey();
-        $data['x_type'] = $this->action;
-        $data['x_version'] = '3.1';
-        $data['x_delim_data'] = 'TRUE';
-        $data['x_delim_char'] = ',';
-        $data['x_encap_char'] = '|';
-        $data['x_relay_response'] = 'FALSE';
+        define("AUTHORIZENET_API_LOGIN_ID", $this->getApiLoginId());
+        define("AUTHORIZENET_TRANSACTION_KEY", $this->getTransactionKey());
+        define("AUTHORIZENET_SANDBOX", $this->getDeveloperMode());
 
-        return $data;
-    }
-
-    protected function getBillingData()
-    {
-        $data = array();
-        $data['x_amount'] = $this->getAmount();
-        $data['x_invoice_num'] = $this->getTransactionId();
-        $data['x_description'] = $this->getDescription();
+        $this->auth->amount = $this->getAmount();
+        $this->auth->invoice_num =  $this->getTransactionId();
+        $this->auth->description = $this->getDescription();
 
         if ($card = $this->getCard()) {
             // customer billing details
-            $data['x_first_name'] = $card->getBillingFirstName();
-            $data['x_last_name'] = $card->getBillingLastName();
-            $data['x_company'] = $card->getBillingCompany();
-            $data['x_address'] = trim(
+            $this->auth->first_name = $card->getBillingFirstName();
+            $this->auth->last_name = $card->getBillingLastName();
+            $this->auth->company = $card->getBillingCompany();
+            $this->auth->address = trim(
                 $card->getBillingAddress1()." \n".
                 $card->getBillingAddress2()
             );
-            $data['x_city'] = $card->getBillingCity();
-            $data['x_state'] = $card->getBillingState();
-            $data['x_zip'] = $card->getBillingPostcode();
-            $data['x_country'] = $card->getBillingCountry();
-            $data['x_phone'] = $card->getBillingPhone();
-            $data['x_email'] = $card->getEmail();
+            $this->auth->city = $card->getBillingCity();
+            $this->auth->state = $card->getBillingState();
+            $this->auth->zip = $card->getBillingPostcode();
+            $this->auth->country = $card->getBillingCountry();
+            $this->auth->phone = $card->getBillingPhone();
+            $this->auth->email = $card->getEmail();
 
             // customer shipping details
-            $data['x_ship_to_first_name'] = $card->getShippingFirstName();
-            $data['x_ship_to_last_name'] = $card->getShippingLastName();
-            $data['x_ship_to_company'] = $card->getShippingCompany();
-            $data['x_ship_to_address'] = trim(
+            $this->auth->ship_to_first_name = $card->getShippingFirstName();
+            $this->auth->ship_to_last_name = $card->getShippingLastName();
+            $this->auth->ship_to_company = $card->getShippingCompany();
+            $this->auth->ship_to_address = trim(
                 $card->getShippingAddress1()." \n".
                 $card->getShippingAddress2()
             );
-            $data['x_ship_to_city'] = $card->getShippingCity();
-            $data['x_ship_to_state'] = $card->getShippingState();
-            $data['x_ship_to_zip'] = $card->getShippingPostcode();
-            $data['x_ship_to_country'] = $card->getShippingCountry();
+            $this->auth->ship_to_city = $card->getShippingCity();
+            $this->auth->ship_to_state = $card->getShippingState();
+            $this->auth->ship_to_zip = $card->getShippingPostcode();
+            $this->auth->ship_to_country = $card->getShippingCountry();
         } elseif ($bankAccount = $this->getBankAccount()) {
             // customer billing details
-            $data['x_first_name'] = $bankAccount->getBillingFirstName();
-            $data['x_last_name'] = $bankAccount->getBillingLastName();
-            $data['x_company'] = $bankAccount->getBillingCompany();
-            $data['x_address'] = trim(
+            $this->auth->first_name = $bankAccount->getBillingFirstName();
+            $this->auth->last_name = $bankAccount->getBillingLastName();
+            $this->auth->company = $bankAccount->getBillingCompany();
+            $this->auth->address = trim(
                 $bankAccount->getBillingAddress1()." \n".
                 $bankAccount->getBillingAddress2()
             );
-            $data['x_city'] = $bankAccount->getBillingCity();
-            $data['x_state'] = $bankAccount->getBillingState();
-            $data['x_zip'] = $bankAccount->getBillingPostcode();
-            $data['x_country'] = $bankAccount->getBillingCountry();
-            $data['x_phone'] = $bankAccount->getBillingPhone();
-            $data['x_email'] = $bankAccount->getEmail();
+            $this->auth->city = $bankAccount->getBillingCity();
+            $this->auth->state = $bankAccount->getBillingState();
+            $this->auth->zip = $bankAccount->getBillingPostcode();
+            $this->auth->country = $bankAccount->getBillingCountry();
+            $this->auth->phone = $bankAccount->getBillingPhone();
+            $this->auth->email = $bankAccount->getEmail();
 
             // customer shipping details
-            $data['x_ship_to_first_name'] = $bankAccount->getShippingFirstName();
-            $data['x_ship_to_last_name'] = $bankAccount->getShippingLastName();
-            $data['x_ship_to_company'] = $bankAccount->getShippingCompany();
-            $data['x_ship_to_address'] = trim(
+            $this->auth->ship_to_first_name = $bankAccount->getShippingFirstName();
+            $this->auth->ship_to_last_name = $bankAccount->getShippingLastName();
+            $this->auth->ship_to_company = $bankAccount->getShippingCompany();
+            $this->auth->ship_to_address = trim(
                 $bankAccount->getShippingAddress1()." \n".
                 $bankAccount->getShippingAddress2()
             );
-            $data['x_ship_to_city'] = $bankAccount->getShippingCity();
-            $data['x_ship_to_state'] = $bankAccount->getShippingState();
-            $data['x_ship_to_zip'] = $bankAccount->getShippingPostcode();
-            $data['x_ship_to_country'] = $bankAccount->getShippingCountry();
+            $this->auth->ship_to_city = $bankAccount->getShippingCity();
+            $this->auth->ship_to_state = $bankAccount->getShippingState();
+            $this->auth->ship_to_zip = $bankAccount->getShippingPostcode();
+            $this->auth->ship_to_country = $bankAccount->getShippingCountry();
         }
 
         return $data;
-    }
-
-    public function sendData($data)
-    {
-        $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
-
-        return $this->response = new AIMResponse($this, $httpResponse->getBody());
-    }
-
-    public function getEndpoint()
-    {
-        return $this->getDeveloperMode() ? $this->developerEndpoint : $this->liveEndpoint;
     }
 }

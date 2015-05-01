@@ -1,6 +1,6 @@
 <?php
 
-namespace Klinche\AuthorizeNet;
+namespace Omnipay\AuthorizeNetSDK;
 
 use Omnipay\Common\AbstractGateway;
 
@@ -11,7 +11,7 @@ class AIMGateway extends AbstractGateway
 {
     public function getName()
     {
-        return 'Klinche Authorize.Net AIM';
+        return 'Authorize.Net SDK AIM';
     }
 
     public function getDefaultParameters()
@@ -56,31 +56,31 @@ class AIMGateway extends AbstractGateway
 
     public function authorize(array $parameters = array())
     {
-        return $this->createRequest('\Klinche\AuthorizeNet\Message\AIMAuthorizeRequest', $parameters);
+        return $this->createRequest('\Omnipay\AuthorizeNetSDK\Message\AIMAuthorizeRequest', $parameters);
     }
 
     public function capture(array $parameters = array())
     {
-        return $this->createRequest('\Klinche\AuthorizeNet\Message\CaptureRequest', $parameters);
+        return $this->createRequest('\Omnipay\AuthorizeNetSDK\Message\CaptureRequest', $parameters);
     }
 
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Klinche\AuthorizeNet\Message\AIMPurchaseRequest', $parameters);
+        return $this->createRequest('\Omnipay\AuthorizeNetSDK\Message\AIMPurchaseRequest', $parameters);
     }
 
     public function void(array $parameters = array())
     {
-        return $this->createRequest('\Klinche\AuthorizeNet\Message\AIMVoidRequest', $parameters);
+        return $this->createRequest('\Omnipay\AuthorizeNetSDK\Message\AIMVoidRequest', $parameters);
     }
 
     public function refund(array $parameters = array())
     {
-        return $this->createRequest('\Klinche\AuthorizeNet\Message\AIMRefundRequest', $parameters);
+        return $this->createRequest('\Omnipay\AuthorizeNetSDK\Message\AIMRefundRequest', $parameters);
     }
 
     public function settledBatchListReport(array $parameters = array())
     {
-        return $this->createRequest('\Klinche\AuthorizeNet\Message\AIMSettledBatchListReportRequest', $parameters);
+        return $this->createRequest('\Omnipay\AuthorizeNetSDK\Message\AIMSettledBatchListReportRequest', $parameters);
     }
 }

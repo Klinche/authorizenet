@@ -1,6 +1,6 @@
 <?php
 
-namespace Klinche\AuthorizeNet\Message;
+namespace Omnipay\AuthorizeNetSDK\Message;
 
 /**
  * Authorize.Net AIM Void Request
@@ -11,11 +11,18 @@ class AIMVoidRequest extends AbstractRequest
 
     public function getData()
     {
+        parent::getData();
+
         $this->validate('transactionReference');
 
-        $data = $this->getBaseData();
-        $data['x_trans_id'] = $this->getTransactionReference();
+        $this->auth->trans_id = $this->getTransactionReference();
+    }
 
-        return $data;
+    public function sendData($data)
+    {
+        /** @var \AuthorizeNetAIM_Response $response */
+        $response = $this->auth->void();
+
+        return $this->response = new AIMResponse($this, $response);
     }
 }
