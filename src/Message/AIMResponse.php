@@ -42,7 +42,11 @@ class AIMResponse extends AbstractResponse
 
     public function getErrorMessage()
     {
-        return $this->response->error_message;
+        if (isset($this->response->error_message)) {
+            return $this->response->error_message;
+        }
+
+        return null;
     }
 
     public function getAuthorizationCode()

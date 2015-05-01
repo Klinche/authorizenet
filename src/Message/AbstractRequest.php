@@ -12,9 +12,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     /** @var \AuthorizeNetAIM */
     protected $auth = null;
 
-    public function __construct() {
-        $this->auth = new \AuthorizeNetAIM();
-    }
 
     public function getApiLoginId()
     {
@@ -80,11 +77,12 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('bankAccount', $value);
     }
 
-    protected function getData()
+    public function getData()
     {
         define("AUTHORIZENET_API_LOGIN_ID", $this->getApiLoginId());
         define("AUTHORIZENET_TRANSACTION_KEY", $this->getTransactionKey());
         define("AUTHORIZENET_SANDBOX", $this->getDeveloperMode());
+        $this->auth = new \AuthorizeNetAIM();
 
         $this->auth->amount = $this->getAmount();
         $this->auth->invoice_num =  $this->getTransactionId();
@@ -147,7 +145,5 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             $this->auth->ship_to_zip = $bankAccount->getShippingPostcode();
             $this->auth->ship_to_country = $bankAccount->getShippingCountry();
         }
-
-        return $data;
     }
 }
