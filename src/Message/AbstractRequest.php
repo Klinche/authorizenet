@@ -79,9 +79,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function getData()
     {
-        define("AUTHORIZENET_API_LOGIN_ID", $this->getApiLoginId());
-        define("AUTHORIZENET_TRANSACTION_KEY", $this->getTransactionKey());
-        define("AUTHORIZENET_SANDBOX", $this->getDeveloperMode());
+        if (!defined('AUTHORIZENET_API_LOGIN_ID')) define('AUTHORIZENET_API_LOGIN_ID', $this->getApiLoginId());
+        if (!defined('AUTHORIZENET_TRANSACTION_KEY')) define('AUTHORIZENET_TRANSACTION_KEY', $this->getTransactionKey());
+        if (!defined('AUTHORIZENET_SANDBOX')) define('AUTHORIZENET_SANDBOX', $this->getDeveloperMode());
         $this->aim = new \AuthorizeNetAIM();
 
         $this->aim->amount = $this->getAmount();

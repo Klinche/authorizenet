@@ -23,9 +23,14 @@ class AIMSettledBatchListReportResponse extends AIMReportResponse
     public function getBatchIds()
     {
         $ids = array();
-        $list = $this->response->xml->batchList;
-        foreach($list as $batch) {
-            $ids[] = $batch->batchId;
+        $list = $this->response;
+
+        if($this->getMessageCode() != "I00001") {
+            return $ids;
+        }
+
+        foreach($this->response->xml->batchList->batch as $batch) {
+            $ids[] = $batch->batchId->__toString();
         }
 
         return $ids;
@@ -40,5 +45,8 @@ class AIMSettledBatchListReportResponse extends AIMReportResponse
     {
         return $this->response->xml->batchList;
     }
+
+
+
 
 }

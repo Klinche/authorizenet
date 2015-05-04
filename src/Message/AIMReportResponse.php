@@ -22,7 +22,7 @@ class AIMReportResponse extends AbstractResponse
 
     public function isSuccessful()
     {
-        return $this->response->isOk();
+        return $this->response->isOk() && $this->getMessageCode() == "I00001";
     }
 
     public function getMessageCode()

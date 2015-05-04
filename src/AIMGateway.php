@@ -83,4 +83,9 @@ class AIMGateway extends AbstractGateway
     {
         return $this->createRequest('\Omnipay\AuthorizeNetSDK\Message\AIMSettledBatchListReportRequest', $parameters);
     }
+
+    public function transactionListReport(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\AuthorizeNetSDK\Message\AIMTransactionListReportRequest', $parameters);
+    }
 }
