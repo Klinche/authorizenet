@@ -27,7 +27,7 @@ class AIMAuthorizeRequest extends AbstractRequest
              /** @var $bankAccount \Omnipay\AuthorizeNetSDK\BankAccount */
             $bankAccount->validate();
             $echeckType = "WEB";
-            if($bankAccount->getBankAccountType() == BankAccount::ACCOUNT_TYPE_BUSINESS_CHECKING) {
+            if($bankAccount->getBankAccountType() == \Omnipay\AuthorizeNetSDK\BankAccount::ACCOUNT_TYPE_BUSINESS_CHECKING) {
                 $echeckType = "CCD";
             }
             $this->aim->setECheck($bankAccount->getRoutingNumber(), $bankAccount->getAccountNumber(), $bankAccount->getBankAccountType(), $bankAccount->getBankName(), $bankAccount->getName(), $echeckType);
